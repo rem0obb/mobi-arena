@@ -20,6 +20,17 @@ for compile benchmark
 # Usage Arena
 
 ```C
+  #include "include/arena.hpp"
   
+  Arena fast(3*sizeof(int)); // allocate 3 blocks long from an length int
   
+  // requests blocks
+  int *p1 = (int*)fast.req(sizeof(int));
+  *p1 = 100;
+  
+  int *p2 = (int*)fast.req(sizeof(int));
+  *p2 = 400;
+  
+  int *p3 = (int*)fast.req(sizeof(int));
+  *p3 = 400;
 ```
