@@ -1,6 +1,7 @@
 #include "arena.hpp"
-
 #include <iostream>
+
+
 Arena::Arena ( unsigned int p_size ) : m_size ( p_size ), m_amount ( m_size )
 {
   m_mem = new char[m_size];
@@ -11,8 +12,6 @@ Arena Arena::operator= ( const Arena &fast )
 {
   delete [] m_mem;
 
-  std::cout << fast.m_size << std::endl;
-  
   m_mem = new char[fast.m_size];
   memcpy ( m_mem, fast.m_mem, fast.m_size );
   m_size = fast.m_size;
@@ -74,7 +73,7 @@ void Arena::mmem ( unsigned int p_amount )
 {
   if ( m_mem == nullptr )
     return;
-
+  
   delete [] m_mem;
   m_mem = new char[p_amount];
   m_ptr = m_mem;

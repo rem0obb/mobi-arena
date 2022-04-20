@@ -1,73 +1,70 @@
+// ------------------------------------------------------------------
+// Test BenchMark Arena-mobi
+// ------------------------------------------------------------------
+
+
 #include "include/arena.hpp"
+
 #include <iostream>
-#include "include/arena.hpp"
 #include <chrono>
+#include <benchmark/benchmark.h>
 
-using namespace std;
-using namespace std::chrono;
+Arena fast ( 1 * sizeof ( int ) );
 
-const int Max = 1000000;
-Arena fast(Max*sizeof(int));
-
-void stack()
+// ------------------------------------------------------------------
+// Stack
+// ------------------------------------------------------------------
+static void Stack ( benchmark::State &state )
 {
-    int a = 5;
+  // Perform setup here
+  for ( auto _ : state )
+  {
+    // This code gets timed
+    int p = 5;
+  }
 }
 
-void heap()
+BENCHMARK ( Stack );
+
+
+// ------------------------------------------------------------------
+// Heap
+// ------------------------------------------------------------------
+
+static void Heap ( benchmark::State &state )
 {
-    int * p = new int;
+  // Perform setup here
+  for ( auto _ : state )
+  {
+    // This code gets timed
+    int *p = new int;
     *p = 5;
     delete p;
+  }
 }
 
-void arena()
+BENCHMARK ( Heap );
+
+// ------------------------------------------------------------------
+// Arena
+// ------------------------------------------------------------------
+
+static void Arena ( benchmark::State &state )
 {
-    int * p = (int*) fast.req(sizeof(int));
+  // Perform setup here
+  for ( auto _ : state )
+  {
+    // This code gets timed
+    int *p = ( int * ) fast.req ( sizeof ( int ) );
     *p = 5;
+    fast.dell();
+  }
 }
 
-int main()
-{
-    // ------------------------------------------------------------------
-    // Stack
-    // ------------------------------------------------------------------
+BENCHMARK ( Arena );
 
-    auto start = high_resolution_clock::now();
-    for (int i = 0; i < Max; ++i)
-        stack();
-    auto end = high_resolution_clock::now();
 
-    cout << "Stack: ";
-    cout.width(4);
-    cout << right;
-    cout << duration_cast<milliseconds>(end - start).count() << " milissegundos" << endl;
 
-    // ------------------------------------------------------------------
-    // Heap
-    // ------------------------------------------------------------------
 
-    start = high_resolution_clock::now();
-    for (int i = 0; i < Max; ++i)
-        heap();
-    end = high_resolution_clock::now();
-
-    cout << "Heap:  ";
-    cout.width(4);
-    cout << right;
-    cout << duration_cast<milliseconds>(end - start).count() << " milissegundos" << endl;
-
-    // ------------------------------------------------------------------
-    // Arena
-    // ------------------------------------------------------------------
-
-    start = high_resolution_clock::now();
-    for (int i = 0; i < Max; ++i)
-        arena();
-    end = high_resolution_clock::now();
-
-    cout << "Arena: ";
-    cout.width(4);
-    cout << right;
-    cout << duration_cast<milliseconds>(end - start).count() << " milissegundos" << endl;
-}
+// Run the benchmark
+BENCHMARK_MAIN();

@@ -4,6 +4,8 @@ project(Arena-mobi VERSION 0.1)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+set(CMAKE_CXX_FLAGS "-lbenchmark  -lpthread")
+
 add_library(Arena-mobi SHARED
 
         src/include/arena.cpp

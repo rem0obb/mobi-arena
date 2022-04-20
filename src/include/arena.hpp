@@ -20,7 +20,6 @@ class Arena
   void mmem(unsigned int );
   void *req ( unsigned int );
   void dell();
-  //void remove ( void *p_mem );
   unsigned int afree();
   
 
