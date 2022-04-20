@@ -1,7 +1,6 @@
 #include "arena.hpp"
+
 #include <iostream>
-
-
 Arena::Arena ( unsigned int p_size ) : m_size ( p_size ), m_amount ( m_size )
 {
   m_mem = new char[m_size];
@@ -27,7 +26,6 @@ Arena::Arena ( const Arena &fast )
   m_size = fast.m_size;
   m_ptr = fast.m_ptr;
   m_amount = fast.m_amount;
-  
 }
 
 Arena::~Arena()
@@ -48,13 +46,17 @@ void *Arena::req ( unsigned int p_amount )
     m_ptr += p_amount;
     m_amount -= p_amount;
   }
-  else
+  else if( p_amount > m_size )
   {
     dell();
     mmem ( p_amount );
     goto jmp;
-  }
-
+  } else
+  {
+    dell();
+    goto jmp;
+  } 
+  
   return block;
 }
 
@@ -73,9 +75,10 @@ void Arena::mmem ( unsigned int p_amount )
 {
   if ( m_mem == nullptr )
     return;
-  
+
   delete [] m_mem;
   m_mem = new char[p_amount];
   m_ptr = m_mem;
-  m_amount = p_amount;
+  m_size = p_amount;
+  m_amount = m_size;
 }

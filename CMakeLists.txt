@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.5)
 
 project(Arena-mobi VERSION 0.1)
 
+find_package(benchmark REQUIRED)
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_CXX_FLAGS "-lbenchmark  -lpthread")
