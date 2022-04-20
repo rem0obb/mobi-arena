@@ -57,7 +57,6 @@ static void Arena ( benchmark::State &state )
     // This code gets timed
     int *p = ( int * ) fast.req ( sizeof ( int ) );
     *p = 5;
-    fast.dell();
   }
 }
 
