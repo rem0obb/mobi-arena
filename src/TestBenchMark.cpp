@@ -4,12 +4,9 @@
 
 
 #include "include/arena.hpp"
-
-#include <iostream>
-#include <chrono>
 #include <benchmark/benchmark.h>
 
-Arena fast ( 1 * sizeof ( int ) );
+Arena fast ( 100 * sizeof ( int ) );
 
 // ------------------------------------------------------------------
 // Stack
