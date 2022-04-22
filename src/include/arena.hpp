@@ -3,17 +3,18 @@
 #include <unistd.h>
 #include <string.h>
 
-class Arena
+struct Arena
 {
  private:
   char *m_mem;
   unsigned int m_size;
   unsigned int m_amount;
   const char* m_ptr;
+  bool m_overwrite;
 
  public:
   ~Arena();
-  Arena ( unsigned int = sysconf(_SC_PAGESIZE) );
+  Arena ( unsigned int = sysconf(_SC_PAGESIZE), bool = true );
   Arena(const Arena& fast);  
   Arena operator=(const Arena &fast);
 

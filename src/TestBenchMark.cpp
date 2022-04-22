@@ -6,8 +6,6 @@
 #include "include/arena.hpp"
 #include <benchmark/benchmark.h>
 
-Arena fast ( 100 * sizeof ( int ) );
-
 // ------------------------------------------------------------------
 // Stack
 // ------------------------------------------------------------------
@@ -46,6 +44,7 @@ BENCHMARK ( Heap );
 // Arena
 // ------------------------------------------------------------------
 
+Arena fast ( 100 * sizeof ( int ) );
 static void Arena ( benchmark::State &state )
 {
   // Perform setup here
@@ -58,8 +57,6 @@ static void Arena ( benchmark::State &state )
 }
 
 BENCHMARK ( Arena );
-
-
 
 
 // Run the benchmark

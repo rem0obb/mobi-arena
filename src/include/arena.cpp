@@ -1,7 +1,10 @@
 #include "arena.hpp"
 
-#include <iostream>
-Arena::Arena ( unsigned int p_size ) : m_size ( p_size ), m_amount ( m_size )
+#include <stdexcept>
+
+Arena::Arena ( unsigned int p_size, bool p_overwrite ) : m_size ( p_size ),
+  m_amount ( m_size ),
+  m_overwrite ( p_overwrite )
 {
   m_mem = new char[m_size];
   m_ptr = m_mem;
@@ -41,22 +44,32 @@ void *Arena::req ( unsigned int p_amount )
 
   if ( p_amount <= m_amount )
   {
-  jmp:
     block = ( char * ) m_ptr;
     m_ptr += p_amount;
     m_amount -= p_amount;
   }
-  else if( p_amount > m_size )
+  else if ( p_amount > m_size )
   {
     dell();
     mmem ( p_amount );
-    goto jmp;
-  } else
+    block = ( char * ) m_ptr;
+    m_ptr += p_amount;
+    m_amount -= p_amount;
+  }
+  else
   {
-    dell();
-    goto jmp;
-  } 
-  
+    if ( m_overwrite )
+    {
+      dell();
+      block = ( char * ) m_ptr;
+      m_ptr += p_amount;
+      m_amount -= p_amount;
+
+    }
+    else
+      throw std::runtime_error ( "Arena full" );
+  }
+
   return block;
 }
 
