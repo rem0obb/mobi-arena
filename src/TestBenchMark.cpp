@@ -56,7 +56,7 @@ static void Arena_Copy_Constructor ( benchmark::State &state )
     int *p = ( int * ) fast.req ( lenght );
     *p = 5;
 
-    int *q = ( int * ) fast.req ( lenght );
+    int *q = ( int * ) fast2.req ( lenght );
     *q = 10;
   }
 }

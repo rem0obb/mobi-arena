@@ -26,8 +26,10 @@ Arena Arena::operator= ( const Arena &fast )
   m_size = fast.m_size;
   m_ptr = fast.m_ptr;
   m_amount = fast.m_amount;
+  m_overwrite = fast.m_overwrite;
   return *this;
 }
+
 
 /*
  * avoid copy arena, greater than the heap, but it loses performance
@@ -41,6 +43,7 @@ Arena::Arena ( const Arena &fast )
   m_size = fast.m_size;
   m_ptr = fast.m_ptr;
   m_amount = fast.m_amount;
+  m_overwrite = fast.m_overwrite;
 }
 
 Arena::~Arena()
