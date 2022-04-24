@@ -51,3 +51,7 @@ obs: when you make a request for more space the previously created arena will be
 void dell(); // will put the pointer to the beginning of the arena
 unsigned int afree(); // will bring the value of available space in the arena
 ```
+
+# Diagrama
+
+![arenaDigrama](assets/arena_image_1.jpg)
