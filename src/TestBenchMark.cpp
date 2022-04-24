@@ -44,20 +44,35 @@ BENCHMARK ( Heap );
 // Arena
 // ------------------------------------------------------------------
 
-Arena fast ( 100 * sizeof ( int ) );
-static void Arena ( benchmark::State &state )
+int lenght = sizeof ( int );
+Arena fast ( 100 * lenght );
+Arena fast2 ( fast );
+static void Arena_Copy_Constructor ( benchmark::State &state )
 {
   // Perform setup here
   for ( auto _ : state )
   {
     // This code gets timed
-    int *p = ( int * ) fast.req ( sizeof ( int ) );
+    int *p = ( int * ) fast.req ( lenght );
+    *p = 5;
+
+    int *q = ( int * ) fast.req ( lenght );
+    *q = 10;
+  }
+}
+
+static void Arena ( benchmark::State &state )
+{
+  for ( auto _ : state )
+  {
+    // This code gets timed
+    int *p = ( int * ) fast.req ( lenght );
     *p = 5;
   }
 }
 
 BENCHMARK ( Arena );
-
+BENCHMARK ( Arena_Copy_Constructor );
 
 // Run the benchmark
 BENCHMARK_MAIN();

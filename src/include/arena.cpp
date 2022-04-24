@@ -2,6 +2,10 @@
 
 #include <stdexcept>
 
+/**
+ * if p_overwrite = true (default) Arena overwrite spaces alocated
+ *
+ * */
 Arena::Arena ( unsigned int p_size, bool p_overwrite ) : m_size ( p_size ),
   m_amount ( m_size ),
   m_overwrite ( p_overwrite )
@@ -10,6 +14,9 @@ Arena::Arena ( unsigned int p_size, bool p_overwrite ) : m_size ( p_size ),
   m_ptr = m_mem;
 }
 
+/*
+ * avoid copy arena, greater than the heap, but it loses performance
+ * */
 Arena Arena::operator= ( const Arena &fast )
 {
   delete [] m_mem;
@@ -22,8 +29,13 @@ Arena Arena::operator= ( const Arena &fast )
   return *this;
 }
 
+/*
+ * avoid copy arena, greater than the heap, but it loses performance
+*/
 Arena::Arena ( const Arena &fast )
 {
+  delete [] m_mem;
+
   m_mem = new char[fast.m_size];
   memcpy ( m_mem, fast.m_mem, fast.m_size );
   m_size = fast.m_size;
@@ -38,6 +50,9 @@ Arena::~Arena()
   m_mem = nullptr;
 }
 
+/*
+ * requestes block in arena passing desired size
+ * */
 void *Arena::req ( unsigned int p_amount )
 {
   char *block = nullptr;
@@ -67,23 +82,34 @@ void *Arena::req ( unsigned int p_amount )
 
     }
     else
-      throw std::runtime_error ( "Arena full" );
+      throw  std::runtime_error ( "Arena full" );
   }
 
   return block;
 }
 
+/* (m_ptr)
+ *   ↓
+ * (m_mem) -> [   ][   ][   ][   ] ...
+ *
+ * */
 void Arena::dell()
 {
   m_ptr = m_mem;
   m_amount = m_size;
 }
 
+/*
+ * return amount free space in arena
+ * */
 unsigned int Arena::afree()
 {
   return m_amount;
 }
 
+/*
+ * ... [  ][  ][  ] <- [del] - [alocate] -> [  ][  ][  ][  ] +++
+ * */
 void Arena::mmem ( unsigned int p_amount )
 {
   if ( m_mem == nullptr )
