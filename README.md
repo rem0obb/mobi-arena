@@ -43,13 +43,13 @@ for compile benchmark
 Functions extras :
 
 ```C
-void mmem(unsigned int ); // allocate more space in the arena 
+void realloc(unsigned int ); // allocate more space in the arena
 ```
 obs: when you make a request for more space the previously created arena will be completely erased and the requested space will be allocated
 
 ```C
 void dell(); // will put the pointer to the beginning of the arena
-unsigned int afree(); // will bring the value of available space in the arena
+unsigned int fquantity(); // will bring the value of available space in the arena
 ```
 
 # Diagrama
