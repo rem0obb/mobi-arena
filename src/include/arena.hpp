@@ -9,7 +9,7 @@ struct Arena
   char *m_mem;
   unsigned int m_size;
   unsigned int m_amount;
-  const char *m_ptr;
+  const char *m_head;
   bool m_overwrite;
 
  public:
@@ -18,10 +18,11 @@ struct Arena
   Arena ( const Arena &fast );
   Arena operator= ( const Arena &fast );
 
-  void mmem ( unsigned int );
+  void realloc ( unsigned int );
   void *req ( unsigned int );
   void dell();
-  //void remove ( void *p_mem );
-  unsigned int afree();
-
+  void erase();
+  void remove ( void *p_mem );
+  unsigned int fquantity();
+    
 };
