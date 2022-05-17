@@ -9,12 +9,14 @@ struct Arena
   char *m_mem;
   unsigned int m_size;
   unsigned int m_amount;
+  unsigned int m_limit;
   const char *m_head;
   bool m_overwrite;
+  
 
  public:
   ~Arena();
-  Arena ( unsigned int = sysconf ( _SC_PAGESIZE ), bool = true );
+  Arena ( unsigned int = sysconf ( _SC_PAGESIZE ), unsigned int p_limit = sysconf ( _SC_PAGESIZE ), bool = true );
   Arena ( const Arena &fast );
   Arena operator= ( const Arena &fast );
 

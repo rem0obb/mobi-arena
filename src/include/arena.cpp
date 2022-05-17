@@ -5,7 +5,7 @@
  * if p_overwrite = true (default) Arena overwrite spaces alocated
  *
  * */
-Arena::Arena ( unsigned int p_size, bool p_overwrite ) : m_size ( p_size ),
+Arena::Arena ( unsigned int p_size, unsigned int p_limit, bool p_overwrite ) : m_size ( p_size ), m_limit( p_limit ),
   m_amount ( m_size ),
   m_overwrite ( p_overwrite )
 {
@@ -26,6 +26,8 @@ Arena Arena::operator= ( const Arena &fast )
   m_head = fast.m_head;
   m_amount = fast.m_amount;
   m_overwrite = fast.m_overwrite;
+  m_limit = m_amount;
+
   return *this;
 }
 
@@ -35,14 +37,13 @@ Arena Arena::operator= ( const Arena &fast )
 */
 Arena::Arena ( const Arena &fast )
 {
-  delete [] m_mem;
-
   m_mem = new char[fast.m_size];
   memcpy ( m_mem, fast.m_mem, fast.m_size );
   m_size = fast.m_size;
   m_head = fast.m_head;
   m_amount = fast.m_amount;
   m_overwrite = fast.m_overwrite;
+  m_limit = m_amount;
 }
 
 Arena::~Arena()
@@ -60,10 +61,15 @@ void *Arena::req ( unsigned int p_amount )
   char *block = nullptr;
 
   if ( p_amount <= m_amount )
-    goto new_block;
-  else if ( p_amount > m_size )
   {
-    dell();
+    if( p_amount < m_limit && !m_overwrite )
+    {
+      realloc (  m_amount );
+      goto new_block;
+    }else
+      goto new_block;
+  }else if ( p_amount > m_size )
+  {
     realloc ( p_amount );
     goto new_block;
   }
