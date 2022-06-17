@@ -15,7 +15,7 @@ static void Stack ( benchmark::State &state )
   for ( auto _ : state )
   {
     // This code gets timed
-    int p = 5;
+    volatile int p = 5;
   }
 }
 
@@ -32,7 +32,7 @@ static void Heap ( benchmark::State &state )
   for ( auto _ : state )
   {
     // This code gets timed
-    int *p = new int;
+    volatile int *p = new int;
     *p = 5;
     delete p;
   }
@@ -46,27 +46,25 @@ BENCHMARK ( Heap );
 
 int lenght = sizeof ( int );
 Arena fast ( 100 * lenght );
-Arena fast2 ( fast );
 static void Arena_Copy_Constructor ( benchmark::State &state )
 {
   // Perform setup here
   for ( auto _ : state )
   {
     // This code gets timed
-    int *p = ( int * ) fast.req ( lenght );
+    int *p = static_cast<int*>(fast.req ( lenght ));
     *p = 5;
 
-    int *q = ( int * ) fast2.req ( lenght );
-    *q = 10;
   }
 }
 
+Arena fast2 ( 100 * lenght );
 static void Arena ( benchmark::State &state )
 {
   for ( auto _ : state )
   {
     // This code gets timed
-    int *p = ( int * ) fast.req ( lenght );
+    int *p = static_cast<int*>(fast2.req ( lenght ));
     *p = 5;
   }
 }

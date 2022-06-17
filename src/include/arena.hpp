@@ -13,11 +13,11 @@ struct Arena
   const char *m_head;
   bool m_overwrite;
   
-
  public:
   ~Arena();
-  Arena ( unsigned int = sysconf ( _SC_PAGESIZE ), unsigned int p_limit = sysconf ( _SC_PAGESIZE ), bool = true );
+  explicit Arena ( unsigned int , unsigned int p_limit = sysconf ( _SC_PAGESIZE ), bool = true );
   Arena ( const Arena &fast );
+  explicit Arena();
   Arena operator= ( const Arena &fast );
 
   void realloc ( unsigned int );
@@ -26,5 +26,4 @@ struct Arena
   void erase();
   void remove ( void *p_mem );
   unsigned int fquantity();
-    
 };

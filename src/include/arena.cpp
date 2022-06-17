@@ -1,27 +1,41 @@
 #include "arena.hpp"
 #include <stdexcept>
 
+#if DEBUG
+  #include <fmt/core.h>
+#endif
+
 /**
  * if p_overwrite = true (default) Arena overwrite spaces alocated
  *
  * */
-Arena::Arena ( unsigned int p_size, unsigned int p_limit, bool p_overwrite ) : m_size ( p_size ), m_limit( p_limit ),
-  m_amount ( m_size ),
-  m_overwrite ( p_overwrite )
+Arena::Arena(unsigned int p_size, unsigned int p_limit, bool p_overwrite) : m_size(p_size), 
+                                                                            m_amount(m_size),
+                                                                            m_limit(p_limit),
+                                                                            m_overwrite(p_overwrite)
 {
   m_mem = new char[m_size];
   m_head = m_mem;
 }
 
+Arena::Arena() : m_mem(nullptr),
+                 m_size(0),
+                 m_amount(0),
+                 m_limit(0),
+                 m_head(nullptr),
+                 m_overwrite(0)
+{
+}
+
 /*
  * avoid copy arena, greater than the heap, but it loses performance
  * */
-Arena Arena::operator= ( const Arena &fast )
+Arena Arena::operator=(const Arena &fast)
 {
-  delete [] m_mem;
+  delete[] m_mem;
 
   m_mem = new char[fast.m_size];
-  memcpy ( m_mem, fast.m_mem, fast.m_size );
+  memcpy(m_mem, fast.m_mem, fast.m_size);
   m_size = fast.m_size;
   m_head = fast.m_head;
   m_amount = fast.m_amount;
@@ -31,14 +45,13 @@ Arena Arena::operator= ( const Arena &fast )
   return *this;
 }
 
-
 /*
  * avoid copy arena, greater than the heap, but it loses performance
-*/
-Arena::Arena ( const Arena &fast )
+ */
+Arena::Arena(const Arena &fast)
 {
   m_mem = new char[fast.m_size];
-  memcpy ( m_mem, fast.m_mem, fast.m_size );
+  memcpy(m_mem, fast.m_mem, fast.m_size);
   m_size = fast.m_size;
   m_head = fast.m_head;
   m_amount = fast.m_amount;
@@ -48,44 +61,44 @@ Arena::Arena ( const Arena &fast )
 
 Arena::~Arena()
 {
-  delete [] m_mem;
-  m_head = m_mem;
+  delete[] m_mem;
   m_mem = nullptr;
+  m_head = m_mem;
 }
 
 /*
  * requestes block in arena passing desired size
  * */
-void *Arena::req ( unsigned int p_amount )
+void *Arena::req(unsigned int p_amount)
 {
-  char *block = nullptr;
-
-  if ( p_amount <= m_amount )
+  if (p_amount <= m_amount)
   {
-    if( p_amount < m_limit && !m_overwrite )
+    if (p_amount < m_limit && m_overwrite && m_size > m_limit)
     {
-      realloc ( m_limit );
+      realloc(m_limit);
       goto new_block;
-    }else
+    }
+    else
       goto new_block;
-  }else if ( p_amount > m_size )
+  }
+  else if (p_amount > m_size)
   {
-    realloc ( p_amount );
+    realloc(p_amount);
     goto new_block;
   }
   else
   {
-    if ( m_overwrite )
+    if (m_overwrite)
     {
       dell();
       goto new_block;
     }
     else
-      throw  std::runtime_error ( "Arena full" );
+      throw std::runtime_error("Arena full");
   }
 
 new_block:
-  block = ( char * ) m_head;
+  char *block = const_cast<char*>(m_head);
   m_head += p_amount;
   m_amount -= p_amount;
 
@@ -108,7 +121,7 @@ void Arena::dell()
  * */
 void Arena::erase()
 {
-  delete [] m_mem;
+  delete[] m_mem;
   m_mem = nullptr;
   m_head = m_mem;
   m_size = 0;
@@ -127,12 +140,12 @@ unsigned int Arena::fquantity()
 /*
  * ... [  ][  ][  ] <- [delete] - [alocate more] -> [  ][  ][  ][  ] +++
  * */
-void Arena::realloc ( unsigned int p_amount )
+void Arena::realloc(unsigned int p_amount)
 {
-  if ( !m_mem && p_amount != 0)
+  if (!m_mem && p_amount != 0)
     return;
 
-  delete [] m_mem;
+  delete[] m_mem;
   m_mem = new char[p_amount];
   m_head = m_mem;
   m_size = p_amount;
