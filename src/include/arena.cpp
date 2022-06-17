@@ -1,10 +1,6 @@
 #include "arena.hpp"
 #include <stdexcept>
 
-#if DEBUG
-  #include <fmt/core.h>
-#endif
-
 /**
  * if p_overwrite = true (default) Arena overwrite spaces alocated
  *
