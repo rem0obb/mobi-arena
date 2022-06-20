@@ -138,8 +138,11 @@ unsigned int Arena::fquantity()
  * */
 void Arena::realloc(unsigned int p_amount)
 {
-  if (!m_mem && p_amount != 0)
+  if (!m_mem)
     delete[] m_mem;
+  else if(p_amount == 0)
+    return;
+
 
   m_mem = new char[p_amount];
   m_head = m_mem;
