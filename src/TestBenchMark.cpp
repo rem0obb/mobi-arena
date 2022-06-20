@@ -58,7 +58,7 @@ static void Arena_Copy_Constructor ( benchmark::State &state )
   }
 }
 
-Arena fast2 ( 100 * lenght );
+Arena fast2 ( fast );
 static void Arena ( benchmark::State &state )
 {
   for ( auto _ : state )
