@@ -2,8 +2,7 @@
 // Test BenchMark Arena-mobi
 // ------------------------------------------------------------------
 
-
-#include "include/arena.hpp"
+#include "src/include/arena.hpp"
 #include <benchmark/benchmark.h>
 
 // ------------------------------------------------------------------
@@ -59,7 +58,7 @@ static void Arena_Copy_Constructor ( benchmark::State &state )
 }
 
 Arena fast2 ( fast );
-static void Arena ( benchmark::State &state )
+static void Arena_Constructor ( benchmark::State &state )
 {
   for ( auto _ : state )
   {
@@ -69,7 +68,7 @@ static void Arena ( benchmark::State &state )
   }
 }
 
-BENCHMARK ( Arena );
+BENCHMARK ( Arena_Constructor );
 BENCHMARK ( Arena_Copy_Constructor );
 
 // Run the benchmark

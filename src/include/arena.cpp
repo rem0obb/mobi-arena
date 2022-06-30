@@ -1,6 +1,10 @@
 #include "arena.hpp"
 #include <stdexcept>
 
+#if DEBUG
+#include <fmt/core.h>
+#endif
+
 /**
  * if p_overwrite = true (default) Arena overwrite spaces alocated
  *
@@ -12,6 +16,9 @@ Arena::Arena(unsigned int p_size, unsigned int p_limit, bool p_overwrite) : m_si
 {
   m_mem = new char[m_size];
   m_head = m_mem;
+#if DEBUG
+  fmt::print("[{}][DEBUG]\n\t Creating Arena\n\t Arena Size: {}\n\t Free quantity Arena: {}\n\t", __FUNCTION__, m_size, m_amount);
+#endif
 }
 
 Arena::Arena() : m_mem(nullptr),
@@ -71,6 +78,9 @@ void *Arena::req(unsigned int p_amount)
   {
     if (p_amount < m_limit && m_overwrite && m_size > m_limit)
     {
+#if DEBUG
+      fmt::print("[{}][DEBUG]\n\t Dominating Arena\n\t Limit: {}\n\t Arena Size: {}\n\t", __FUNCTION__, m_limit, m_size);
+#endif
       realloc(m_limit);
       goto new_block;
     }
@@ -79,6 +89,9 @@ void *Arena::req(unsigned int p_amount)
   }
   else if (p_amount > m_size)
   {
+#if DEBUG
+    fmt::print("[{}][DEBUG]\n\t Increasing arena\n\t Arena Size: {}\n\t Requested: {}\n\t", __FUNCTION__, m_size, p_amount);
+#endif
     realloc(p_amount);
     goto new_block;
   }
@@ -90,13 +103,17 @@ void *Arena::req(unsigned int p_amount)
       goto new_block;
     }
     else
-      throw std::runtime_error("Arena full");
+      throw std::runtime_error("Arena : Arena is full");
   }
 
 new_block:
   char *block = const_cast<char*>(m_head);
   m_head += p_amount;
   m_amount -= p_amount;
+
+#if DEBUG
+  fmt::print("[{}][DEBUG]\n\t New Block\n\t Size: {}\n\t Free quantity Arena:\n\t", __FUNCTION__, p_amount, m_amount);
+#endif
 
   return block;
 }
@@ -117,6 +134,9 @@ void Arena::dell()
  * */
 void Arena::erase()
 {
+#if DEBUG
+  fmt::print("\n[{}][DEBUG]\n\t Erase Arena\n\t Arena Size: {}\n\t Free quantity Arena:", __FUNCTION__, m_size, m_amount);
+#endif
   delete[] m_mem;
   m_mem = nullptr;
   m_head = m_mem;
@@ -138,11 +158,10 @@ unsigned int Arena::fquantity()
  * */
 void Arena::realloc(unsigned int p_amount)
 {
-  if (!m_mem)
+  if (m_mem != nullptr)
     delete[] m_mem;
-  else if(p_amount == 0)
+  else if(p_amount == 0 || p_amount == m_size)
     return;
-
 
   m_mem = new char[p_amount];
   m_head = m_mem;
