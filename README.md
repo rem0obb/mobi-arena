@@ -10,7 +10,8 @@ Benchmark using [google-benchmark](https://github.com/google/benchmark)
 
 # Tests
 
-Tests using [google-test](https://github.com/google/googletest) 
+Tests using [google-test](https://github.com/google/googletest)
+
 ![Test](assets/test_arena.png)
 
 for compile benchmark and tests
@@ -19,7 +20,6 @@ for compile benchmark and tests
   cd build
   cmake ..
   make
-
 ```
 
 # Usage Arena
