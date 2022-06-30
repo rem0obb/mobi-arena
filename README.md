@@ -4,11 +4,16 @@ Arena created for project mobi-av disponibilized in github to usage
 
 # Benchmark
 
-Benchmark using [benchmark-google](https://github.com/google/benchmark) 
+Benchmark using [google-benchmark](https://github.com/google/benchmark) 
 
 ![BenchMark](assets/Arena-BenchMark.png)
 
-for compile benchmark 
+# Tests
+
+Tests using [google-test](https://github.com/google/googletest) 
+![Test](assets/test_arena.png)
+
+for compile benchmark and tests
 ```
   mkdir build
   cd build
