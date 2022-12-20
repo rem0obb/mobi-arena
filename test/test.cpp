@@ -47,8 +47,8 @@ TEST_F(T_Arena, Fast)
     *t_five = 0x41; // A
     *t_six = 0x56; // V
 
-    EXPECT_EQ(0x41, *t_one);
-    EXPECT_EQ(0x56, *t_two);
+    EXPECT_EQ(*t_five, *t_one);
+    EXPECT_EQ(*t_six, *t_two);
 
     delete m_fast;
 }
@@ -62,7 +62,7 @@ TEST_F(T_Arena, CopyFast)
     char *name = req_char(size);
 
     Arena fast2(*m_fast);
-    char* name2 = static_cast<char*>(fast2.req(size));
+    char* name2 = req_char(size);
 
     EXPECT_EQ(*name2, *name);  
 
