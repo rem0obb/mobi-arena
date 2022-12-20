@@ -5,7 +5,7 @@
  * if p_overwrite = true (default) Arena overwrite spaces alocated
  *
  * */
-Arena::Arena(unsigned int p_size, unsigned int p_limit, bool p_overwrite) : m_size(p_size), 
+Arena::Arena(unsigned int p_size, unsigned int p_limit, bool p_overwrite) : m_size(p_size),
                                                                             m_amount(m_size),
                                                                             m_limit(p_limit),
                                                                             m_overwrite(p_overwrite)
@@ -71,7 +71,7 @@ void *Arena::req(unsigned int p_amount)
   {
     if (p_amount < m_limit && m_overwrite && m_size > m_limit)
     {
-      realloc(m_limit);
+      realloc(m_limit,  m_limit);
       goto new_block;
     }
     else
@@ -79,7 +79,7 @@ void *Arena::req(unsigned int p_amount)
   }
   else if (p_amount > m_size)
   {
-    realloc(p_amount);
+    realloc(p_amount, m_limit);
     goto new_block;
   }
   else
@@ -94,7 +94,7 @@ void *Arena::req(unsigned int p_amount)
   }
 
 new_block:
-  char *block = const_cast<char*>(m_head);
+  char *block = const_cast<char *>(m_head);
   m_head += p_amount;
   m_amount -= p_amount;
 
@@ -136,15 +136,17 @@ unsigned int Arena::fquantity()
 /*
  * ... [  ][  ][  ] <- [delete] - [alocate more] -> [  ][  ][  ][  ] +++
  * */
-void Arena::realloc(unsigned int p_amount)
+void Arena::realloc(unsigned int p_amount, unsigned int p_limit)
 {
-  if (m_mem != nullptr)
-    delete[] m_mem;
-  else if(p_amount == 0 || p_amount == m_size)
-    return;
-
-  m_mem = new char[p_amount];
-  m_head = m_mem;
-  m_size = p_amount;
-  m_amount = m_size;
-}
+  if (p_amount > 0 && p_amount > m_size &&  p_limit > 0)
+  {
+    if(m_mem != nullptr)
+      delete[] m_mem;
+    
+    m_mem = new char[p_amount];
+    m_head = m_mem;
+    m_size = p_amount;
+    m_amount = m_size;
+    m_limit = p_limit; 
+  }
+} 

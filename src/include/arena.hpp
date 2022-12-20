@@ -20,7 +20,7 @@ struct Arena
   explicit Arena();
   Arena operator= ( const Arena &fast );
 
-  void realloc ( unsigned int );
+  void realloc(unsigned int p_amount, unsigned int p_limit);
   void *req ( unsigned int );
   void dell();
   void erase();
