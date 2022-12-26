@@ -77,14 +77,14 @@ void *Arena::req(unsigned int p_amount)
     else
       goto new_block;
   }
-  else if (p_amount > m_size)
+  else if (p_amount > m_size && m_overwrite )
   {
     realloc(p_amount, m_limit);
     goto new_block;
   }
   else
   {
-    if (m_overwrite)
+    if (m_overwrite && p_amount <= m_size)
     {
       dell();
       goto new_block;
